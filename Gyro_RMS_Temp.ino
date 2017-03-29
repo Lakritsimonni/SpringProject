@@ -11,7 +11,7 @@ DallasTemperature sensors(&oneWire);
 
 
 int sample_interval = 500; //Milliseconds
-
+float meanTemperature;
 float rms_x, rms_y, rms_z = 0; 
 void setup() {
 
@@ -41,11 +41,11 @@ void loop() {
   
  
   Gyro_RMS();
+  meanTemp();
 
-  sensors.requestTemperatures();
-  Serial.print(sensors.getTempCByIndex(0));
-  Serial.print(" Celsius\t");
-
+  /*Serial.print("Mean temp: ");
+  Serial.print(meanTemperature);
+  Serial.print("\n");
   //Serial.print("G ");
   Serial.print("X: ");
   Serial.print("\t");
@@ -58,6 +58,7 @@ void loop() {
   Serial.print(" Z: ");
   Serial.print("\t");
   Serial.println(rms_z);
+  */
   delay(100);
 }
 
@@ -74,9 +75,6 @@ float mean_x, mean_y, mean_z = 0;
 rms_x = 0;
 rms_y = 0;
 rms_z = 0;
-
-
-
 
 for (int i=0; i < 10; i++)
         {
@@ -118,8 +116,21 @@ return rms_x, rms_y, rms_z;
 }
 
 
+float meanTemp(){
 
 
+  float tempRead; 
+  float combineTemp = 0;
+  for (int i = 0; i < 10; i++){
+    
+  sensors.requestTemperatures();
+  tempRead = sensors.getTempCByIndex(0);
+  combineTemp = combineTemp + tempRead;
+  
+  }
+   meanTemperature = combineTemp / 10;
+   return meanTemperature;
+}
 
 
 
